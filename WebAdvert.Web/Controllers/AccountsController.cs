@@ -44,7 +44,7 @@ namespace WebAdvert.Web.Controllers
             var userCreated =  await _userManager.CreateAsync(user, model.Password);
             if (userCreated.Succeeded)
             {
-                RedirectToAction("Confirm");
+              return  RedirectToAction("Confirm");
             }
             return View(model);
         }
@@ -84,6 +84,33 @@ namespace WebAdvert.Web.Controllers
             }
 
 
+        }
+
+        public async Task<IActionResult> Login()
+        {
+            var model = new LoginModel();
+            return View(model);
+        }
+        
+        [HttpPost]
+        [ActionName("Login")]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var restult = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false).ConfigureAwait(false);
+                if (restult.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("LoginError","Email and password do not match");
+                }
+
+
+            }
+            return View(model);
         }
     }
 }

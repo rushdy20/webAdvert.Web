@@ -25,21 +25,23 @@ namespace WebAdvert.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
             services.AddCognitoIdentity();
-            //services.AddCognitoIdentity(config => 
-            //{
-            //    config.Password = new PasswordOptions
-            //    {
-            //        RequireDigit = false,
-            //        RequiredLength = 6,
-            //        RequireLowercase = false,
-            //        RequiredUniqueChars = 0,
-            //        RequireNonAlphanumeric = false,
-            //        RequireUppercase = false
-            //    };
-            //});
-           
+             services.AddControllersWithViews();
+             services.ConfigureApplicationCookie(options => { options.LoginPath = "/Accounts/Login"; });
+
+             //services.AddCognitoIdentity(config =>
+             //{
+             //    config.Password = new PasswordOptions
+             //    {
+             //        RequireDigit = false,
+             //        RequiredLength = 6,
+             //        RequireLowercase = false,
+             //        RequiredUniqueChars = 0,
+             //        RequireNonAlphanumeric = false,
+             //        RequireUppercase = false
+             //    };
+             //});
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
