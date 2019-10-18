@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebAdvert.Web.Services;
 
 namespace WebAdvert.Web
 {
@@ -29,18 +30,19 @@ namespace WebAdvert.Web
              services.AddControllersWithViews();
              services.ConfigureApplicationCookie(options => { options.LoginPath = "/Accounts/Login"; });
 
-             //services.AddCognitoIdentity(config =>
-             //{
-             //    config.Password = new PasswordOptions
-             //    {
-             //        RequireDigit = false,
-             //        RequiredLength = 6,
-             //        RequireLowercase = false,
-             //        RequiredUniqueChars = 0,
-             //        RequireNonAlphanumeric = false,
-             //        RequireUppercase = false
-             //    };
-             //});
+            //services.AddCognitoIdentity(config =>
+            //{
+            //    config.Password = new PasswordOptions
+            //    {
+            //        RequireDigit = false,
+            //        RequiredLength = 6,
+            //        RequireLowercase = false,
+            //        RequiredUniqueChars = 0,
+            //        RequireNonAlphanumeric = false,
+            //        RequireUppercase = false
+            //    };
+            //});
+            services.AddTransient<IFileUploader, S3FileUploader>();
 
         }
 

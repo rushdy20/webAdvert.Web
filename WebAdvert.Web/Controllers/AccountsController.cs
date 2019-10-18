@@ -33,7 +33,7 @@ namespace WebAdvert.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = _pool.GetUser(model.Email);
+            var user = await _pool.FindByIdAsync(model.Email);// GetUser(model.Email);
             if (user != null)
             {
                 ModelState.AddModelError("UserExists", "User with this email already exists");
@@ -68,7 +68,10 @@ namespace WebAdvert.Web.Controllers
                 return View(model);
             }
 
-            var result = await _userManager.ConfirmEmailAsync(user, model.Code);
+            //var result = await _userManager. ConfirmEmailAsync(user, model.Code);
+            var result = await ((CognitoUserManager<CognitoUser>)_userManager)
+                .ConfirmSignUpAsync(user, model.Code, true).ConfigureAwait(false);
+
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
