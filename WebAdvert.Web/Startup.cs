@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebAdvert.Web.ServiceClients;
 using WebAdvert.Web.Services;
 
 namespace WebAdvert.Web
@@ -29,6 +30,7 @@ namespace WebAdvert.Web
             services.AddCognitoIdentity();
              services.AddControllersWithViews();
              services.ConfigureApplicationCookie(options => { options.LoginPath = "/Accounts/Login"; });
+             services.AddHttpClient<IAdvertApiClient, AdvertApiClient>();
 
             //services.AddCognitoIdentity(config =>
             //{

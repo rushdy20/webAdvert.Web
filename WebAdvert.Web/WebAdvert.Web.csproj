@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AdvertApi.Models" Version="1.0.0" />
     <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="1.0.3" />
     <PackageReference Include="Amazon.Extensions.CognitoAuthentication" Version="1.0.3" />
     <PackageReference Include="Amazon.S3" Version="0.14.1" />
@@ -14,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
   </ItemGroup>
