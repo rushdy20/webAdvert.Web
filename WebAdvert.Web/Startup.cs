@@ -1,17 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebAdvert.Web.ServiceClients;
 using WebAdvert.Web.Services;
+using AutoMapper;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace WebAdvert.Web
 {
@@ -30,7 +29,12 @@ namespace WebAdvert.Web
             services.AddCognitoIdentity();
              services.AddControllersWithViews();
              services.ConfigureApplicationCookie(options => { options.LoginPath = "/Accounts/Login"; });
-             services.AddHttpClient<IAdvertApiClient, AdvertApiClient>();
+             services.AddTransient<IFileUploader, S3FileUploader>();
+            
+             services.AddHttpClient<IAdvertApiClient, AdvertApiClient>().AddPolicyHandler(GetRetryPolicy())
+                 .AddPolicyHandler(GetCircuitBrakerPattern());
+             services.AddAutoMapper(typeof(Startup));
+
 
             //services.AddCognitoIdentity(config =>
             //{
@@ -46,6 +50,18 @@ namespace WebAdvert.Web
             //});
             services.AddTransient<IFileUploader, S3FileUploader>();
 
+        }
+
+        private IAsyncPolicy<HttpResponseMessage> GetCircuitBrakerPattern()
+        {
+            return HttpPolicyExtensions.HandleTransientHttpError().CircuitBreakerAsync(3, TimeSpan.FromSeconds(30));
+        }
+
+        private IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions.HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound).WaitAndRetryAsync(5,
+                    retryAttemp => TimeSpan.FromSeconds(Math.Pow(2, retryAttemp)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

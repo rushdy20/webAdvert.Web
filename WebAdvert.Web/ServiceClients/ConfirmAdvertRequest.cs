@@ -6,10 +6,10 @@ using AdvertApi.Models;
 
 namespace WebAdvert.Web.ServiceClients
 {
-  public interface IAdvertApiClient
-  {
-      Task<AdvertResponse> Create(CreateAdvertModel model);
-      Task<bool> Confirm(ConfirmAdvertRequest model);
+    public class ConfirmAdvertRequest
+    {
+        public string Id { get; set; }
 
-  }
+        public AdvertStatus Status { get; set; }
+    }
 }
